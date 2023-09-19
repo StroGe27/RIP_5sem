@@ -1,0 +1,25 @@
+<!doctype html>
+{% load static %}
+<html lang="en" class="h-100">
+<head>
+  <meta charset="utf-8">
+    <title>{% block title %}список товаров{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/order.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bg-orders.css' %}">
+    
+</head>
+<body>
+  <div class="nav-panel">
+    <img style="margin-top=10px; margin-left=10px; width: 50px; height: auto;" src="bmstu_lab/static/images/aws.png" alt="AWS">
+    <h1 style="color: white; margin-top=0px;">Аренда виртуальных машин</h1>
+  </div>
+    {% block content %}
+    
+    {% endblock %}
+    <div style="background-color=white; height=100px; width=100%">
+      тут какой-то текст и продожение
+    </div>
+  
+</body>
+</html>
