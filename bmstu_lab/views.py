@@ -39,7 +39,7 @@ def GetOrder(request, id):
     if order:
         print(order["title"])
     else:
-        print("Not found")
+        print("Not found!")
     return render(request, 'order.html', {'data' : {
         'orders': order,
     }})
