@@ -1,9 +1,13 @@
 {% load static %}
 <div class="order-div">
     <img class="order-img" src="{% static element.src %}" alt="My image">
-    <div> {{ element.title }} </div>
-    <div class="order-text"> {{ element.definition }} </div>
-
-
+    <div style="margin-left: 10px; text-align: center; font-weight: 1000;"> {{ element.title }} </div>
+    
+    <div class="order-text-info">
+        <li> {{ element.definition.processor }} </li>
+        <li> {{ element.definition.Ghz }} ГГц</li>
+        <li> {{ element.definition.cores }} ядер</li>
+        <li> {{ element.definition.ram }} Gb</li>
+    </div>
     <button class="button-style" onclick="location.href='{% url 'order_url' element.id %}'" >Подробнее</button>
 </div>

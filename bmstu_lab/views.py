@@ -1,6 +1,6 @@
 from datetime import date
 from django.shortcuts import render
-from django.http import HttpResponse
+
 info_arr = [
     {'processor': 'Intel Xeon E-2236', "Ghz": 3.5, "cores": 6, "ram": 32},
     {'processor': 'Intel Xeon E-2386G', "Ghz": 3.4, "cores": 6, "ram": 32},
@@ -29,9 +29,11 @@ def GetOrders(request):
         else:
             return render(request, 'orders.html', {'data' : {
                 'orders': orders_arr,
+                'query': input_text,
             }})
     return render(request, 'orders.html', {'data' : {
         'orders': temp_arr,
+        'query': input_text,
     }})
 
 def GetOrder(request, id):

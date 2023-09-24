@@ -9,13 +9,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="order-text">
-    Информация о товаре:
-    <div>{{ data.orders.title }}</div>
-    <div>{{ data.orders.definition.processor }}</div>
-    <div>{{ data.orders.definition.Ghz }}</div>
-    <div>{{ data.orders.definition.cores }}</div>
-    <div>{{ data.orders.definition.ram }}</div>
+<div class="order-text server-order__card">
+    
+    <div>Конфигурация: {{ data.orders.title }}</div>
+    <div>Процессор: {{ data.orders.definition.processor }}</div>
+    <div>Герцовка: {{ data.orders.definition.Ghz }} ГГц</div>
+    <div>Ядра: {{ data.orders.definition.cores }}</div>
+    <div>Память: {{ data.orders.definition.ram }} Гб</div>
 </div>
 
 {% endblock %}

@@ -10,14 +10,12 @@
         <input type="submit" value="Поиск">
     </div>
 </div> {% endcomment %}
-{% load static %}
 <div class="logo">
-   
-   <div class="search">
-    <form action=""  method="get">
-      <label for="text">Продукты</label><br>
-      <input id="text" name="sub" type="text" value={{data.query_c}}>
-      <input type="submit" value="Поиск">
-    </form>
+  <div class="search">
+  <form action=""  method="get">
+    <label for="text">Поиск по модели</label><br>
+    <input id="text" name="sub" type="text" value={{ data.query }}>
+    <input type="submit" value="Поиск">
+  </form>
   </div>
-  </div>
+</div>
