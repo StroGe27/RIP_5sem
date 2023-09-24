@@ -1,8 +1,9 @@
 {% load static %}
 <div class="order-div">
     <img class="order-img" src="{% static element.src %}" alt="My image">
+    <div> {{ element.title }} </div>
     <div class="order-text"> {{ element.definition }} </div>
-    <button class="button-style" onclick="location.href='{% url 'order_url' element.id %}'" >
-        {{ element.title }}
-    </button>
+
+
+    <button class="button-style" onclick="location.href='{% url 'order_url' element.id %}'" >Подробнее</button>
 </div>

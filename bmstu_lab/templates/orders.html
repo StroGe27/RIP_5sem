@@ -2,15 +2,19 @@
 
 {% block title %}Список товаров{% endblock %}
 
-{% block content %}
+{% block navigation %}
+    {% include 'nav_panel.html' %}
+{% endblock %}
 
-{% load static %}
+{% block content %}
 <div class="bg-orders">
     <div class="div-orders">
         {% for order in data.orders %}
             {% include 'order_element.html' with element=order %}
             {% empty %}
-                <li>Список пуст</li>
+            <div class="order-div">
+                Товара с таким названием не существует
+            </div>
         {% endfor %}
     </div>
 </div>

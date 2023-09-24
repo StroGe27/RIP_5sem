@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
 
+{% block navigation %}
+    <button class="button-style" onclick="location.href='/'" > Вернуться назад </button>
+{% endblock %}
+
 {% block title %}
     Заказ №{{ data.id }}
 {% endblock %}
 
 {% block content %}
-<div class="order-text">Информация о заказе №{{ data.id }}</div>
+<div class="order-text">
+    Информация о товаре:
+    <div>{{ data.orders.title }}</div>
+    <div>{{ data.orders.definition.processor }}</div>
+    <div>{{ data.orders.definition.Ghz }}</div>
+    <div>{{ data.orders.definition.cores }}</div>
+    <div>{{ data.orders.definition.ram }}</div>
+</div>
+
 {% endblock %}
