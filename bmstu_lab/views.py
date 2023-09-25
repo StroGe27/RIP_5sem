@@ -13,9 +13,9 @@ orders_arr = [
     {'title': 'EL11-SSD-10GE', 'id': 1, 'src': '/images/1.jpg', 'definition': info_arr[0]},
     {'title': 'EL42-NVMe', 'id': 2, 'src': 'images/2.jpg', 'definition': info_arr[1]},
     {'title': 'EL13-SSD', 'id': 3, 'src': 'images/3.jpg', 'definition': info_arr[2]},
-    {'title': 'BL22-NVMe', 'id': 4, 'src': 'images/1.jpg', 'definition': info_arr[3]},
-    {'title': 'BL21R-NVMe', 'id': 5, 'src': 'images/2.jpg', 'definition': info_arr[4]},
-    {'title': 'PL25-NVMe', 'id': 6, 'src': 'images/3.jpg', 'definition': info_arr[5]},
+    {'title': 'BL22-NVMe', 'id': 4, 'src': 'images/4.jpg', 'definition': info_arr[3]},
+    {'title': 'BL21R-NVMe', 'id': 5, 'src': 'images/5.jpg', 'definition': info_arr[4]},
+    {'title': 'PL25-NVMe', 'id': 6, 'src': 'images/6.jpg', 'definition': info_arr[5]},
 ]
 
 def GetOrders(request):
