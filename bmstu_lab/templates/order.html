@@ -9,13 +9,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="order-text server-order__card">
-    
-    <div>Конфигурация: {{ data.orders.title }}</div>
-    <div>Процессор: {{ data.orders.definition.processor }}</div>
-    <div>Герцовка: {{ data.orders.definition.Ghz }} ГГц</div>
-    <div>Ядра: {{ data.orders.definition.cores }}</div>
-    <div>Память: {{ data.orders.definition.ram }} Гб</div>
+{% load static %}
+<div style="display: flex;">
+    <div class="order-text server-conf">
+        <div>Конфигурация: {{ data.orders.title }}</div>
+        <div>Процессор: {{ data.orders.definition.processor }}</div>
+        <div>Герцовка: {{ data.orders.definition.Ghz }} ГГц</div>
+        <div>Ядра: {{ data.orders.definition.cores }}</div>
+        <div>Память: {{ data.orders.definition.ram }} Гб</div>
+    </div>   
+    <div style="width: 300px;">
+        <img class="order-img" src="{% static data.orders.src %}" alt="My image">
+    </div>
 </div>
-
 {% endblock %}

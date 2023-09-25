@@ -9,3 +9,8 @@
     height: 500px;
     margin: 0 auto;
 }
+.bg-full-page {
+    width: 100%;
+    height: 1200px;
+    background-color: darkblue;
+}
