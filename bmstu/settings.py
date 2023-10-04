@@ -73,15 +73,21 @@ WSGI_APPLICATION = 'bmstu.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'first_db',
-        'USER': 'dbuser',
-        'PASSWORD': '123',
+        'NAME': 'student',
+        'USER': 'student',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': 5432, # Стандартный порт PostgreSQL
-        'OPTIONS': {'charset': 'utf8'},
+        # 'OPTIONS': {'charset': 'utf8'},
         'TEST_CHARSET': 'utf8',
     }
 }

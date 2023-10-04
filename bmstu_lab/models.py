@@ -1,32 +1,66 @@
-from django.db import models, migrations
-from django.contrib.auth.models import User
+from django.db import models
 
-# Create your models here.
-class Server(models.Model):
-    processor = models.CharField(max_length=100)
-    Ghz = models.FloatField()
-    cores = models.IntegerField()
-    ram = models.IntegerField()
+class Book(models.Model):
+    name = models.CharField(max_length=30)
+    description = models.CharField(max_length=255)
 
-class Order(models.Model):
-    title = models.CharField(max_length=100)
-    id = models.IntegerField(primary_key=True)
-    src = models.CharField(max_length=100)
-    definition = models.ManyToManyField(Server)
+    class Meta:
+        app_label = 'bmstu_lab'
+        managed = False
+        db_table = 'books'
 
-# info_arr = [
-#     {'processor': 'Intel Xeon E-2236', "Ghz": 3.5, "cores": 6, "ram": 32},
-#     {'processor': 'Intel Xeon E-2386G', "Ghz": 3.4, "cores": 6, "ram": 32},
-#     {'processor': 'Intel Xeon E-2236', "Ghz": 3.4, "cores": 6, "ram": 32},
-#     {'processor': 'Intel Xeon W-2255', "Ghz": 3.7, "cores": 10, "ram": 128},
-#     {'processor': 'Intel Xeon W-2255', "Ghz": 3.7, "cores": 10, "ram": 256},
-#     {'processor': 'Intel Xeon Gold 6354', "Ghz": 3, "cores": 18, "ram": 256},
-# ]
-# orders_arr = [
-#     {'title': 'EL11-SSD-10GE', 'id': 1, 'src': '/images/1.jpg', 'definition': info_arr[0]},
-#     {'title': 'EL42-NVMe', 'id': 2, 'src': 'images/2.jpg', 'definition': info_arr[1]},
-#     {'title': 'EL13-SSD', 'id': 3, 'src': 'images/3.jpg', 'definition': info_arr[2]},
-#     {'title': 'BL22-NVMe', 'id': 4, 'src': 'images/4.jpg', 'definition': info_arr[3]},
-#     {'title': 'BL21R-NVMe', 'id': 5, 'src': 'images/5.jpg', 'definition': info_arr[4]},
-#     {'title': 'PL25-NVMe', 'id': 6, 'src': 'images/6.jpg', 'definition': info_arr[5]},
-# ]
+# class VM(models.Model):
+#     # статус удален/действует
+#     status = models.CharField(max_length=10)
+#     class Meta:
+#         app_label = 'bmstu_lab'
+#         managed = False
+#         db_table = 'student'
+
+class Users(models.Model):
+    name = models.CharField(max_length=30)
+    class Meta:
+        app_label = 'bmstu_lab'
+        managed = False
+        db_table = 'users'
+
+class Moderators(models.Model):
+    name = models.CharField(max_length=30)
+    class Meta:
+        app_label = 'bmstu_lab'
+        managed = False
+        db_table = 'moderators'
+
+class Requests(models.Model):
+    status = models.CharField(max_length=10)
+    date_create = models.DateField()
+    date_formation = models.DateField()
+    date_complete = models.DateField()
+    user = models.ForeignKey('Users', on_delete=models.CASCADE)
+    moderator = models.ForeignKey('Moderators', on_delete=models.CASCADE)
+    def __str__(self):
+        return self.user
+    class Meta:
+        app_label = 'bmstu_lab'
+        managed = False
+        db_table = 'request'
+
+class Orders(models.Model):
+    title = models.CharField(max_length=50)
+    src = models.CharField(max_length=50)
+    definition = models.ForeignKey('Info_orders', on_delete=models.CASCADE)
+    status = models.CharField(max_length=10)
+    class Meta:
+        app_label = 'bmstu_lab'
+        managed = False
+        db_table = 'orders'
+
+class Info_orders(models.Model):
+    processor = models.CharField(max_length=10)
+    ghz = models.CharField(max_length=10)
+    cores = models.CharField(max_length=10)
+    ram = models.CharField(max_length=10)
+    class Meta:
+        app_label = 'bmstu_lab'
+        managed = False
+        db_table = 'info_orders'

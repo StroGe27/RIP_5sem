@@ -4,10 +4,10 @@
     <div style="margin-left: 10px; text-align: center; font-weight: 1000;"> {{ element.title }} </div>
     
     <div class="order-text-info">
-        <li> {{ element.definition.processor }} </li>
-        <li> {{ element.definition.Ghz }} ГГц</li>
-        <li> {{ element.definition.cores }} ядер</li>
-        <li> {{ element.definition.ram }} Gb</li>
+        <li> {{ element.title }} </li>
+        <li> {{ element.src }} </li>
+        <li> {{ element.definition }} </li>
+        <li> {{ element.status }} </li>
     </div>
     <button class="button-style" onclick="location.href='{% url 'order_url' element.id %}'" >Подробнее</button>
 </div>

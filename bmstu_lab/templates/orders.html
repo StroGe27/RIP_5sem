@@ -13,7 +13,9 @@
             {% include 'order_element.html' with element=order %}
             {% empty %}
             <div class="order-div">
-                Товара с таким названием не существует
+                <div style="margin: 150px 10px; text-align: center; font-weight: 1000;">
+                    Товара с таким названием не существует
+                </div>
             </div>
         {% endfor %}
     </div>
