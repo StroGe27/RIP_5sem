@@ -1,4 +1,3 @@
-from datetime import date
 from django.shortcuts import render
 
 info_arr = [
@@ -22,6 +21,11 @@ def GetOrders(request):
     input_text = request.GET.get("sub")
     print(input_text)
     temp_arr = []
+    if input_text is None:
+        return render(request, 'orders.html', {'data' : {
+                'orders': orders_arr,
+                'query': "",
+            }})
     for i in orders_arr:
         if input_text is not None:
             if input_text in i['title']:
