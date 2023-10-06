@@ -1,13 +1,15 @@
 {% load static %}
 <div class="order-div">
-    <img class="order-img" src="{% static element.src %}" alt="My image">
+    {% comment %} <img class="order-img" src="{% static element.src %}" alt="My image"> {% endcomment %}
+    <div class="order-img" style="background-color: rgb({{ element.ram }}, 0, {{ element.ghz }})"></div>
     <div style="margin-left: 10px; text-align: center; font-weight: 1000;"> {{ element.title }} </div>
     
     <div class="order-text-info">
-        <li> {{ element.title }} </li>
-        <li> {{ element.src }} </li>
-        <li> {{ element.definition }} </li>
-        <li> {{ element.status }} </li>
+        <li>Процессор: {{ element.processor }}</li>
+        <li> {{ element.ghz }} ГГц</li>
+        <li> {{ element.ram }} ГБ</li>
+        <li> {{ element.cost }} ₽/мес.</li>
+        {% comment %} <li> id: {{ element.id }}</li> {% endcomment %}
     </div>
     <button class="button-style" onclick="location.href='{% url 'order_url' element.id %}'" >Подробнее</button>
 </div>

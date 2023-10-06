@@ -6,7 +6,5 @@ from bmstu_lab import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.GetOrders),
-    path('order/<int:id>/', views.GetOrder, name='order_url'),
-    path('aaa/', views.GetOrderss)
-
+    path('order/<int:id>/', views.GetOrder, name='order_url')
 ]

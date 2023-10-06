@@ -12,14 +12,35 @@
 {% load static %}
 <div style="display: flex;">
     <div class="order-text server-conf">
-        <div>Конфигурация: {{ data.orders.title }}</div>
-        <div>Процессор: {{ data.orders.definition.processor }}</div>
-        <div>Герцовка: {{ data.orders.definition.Ghz }} ГГц</div>
-        <div>Ядра: {{ data.orders.definition.cores }}</div>
-        <div>Память: {{ data.orders.definition.ram }} Гб</div>
+        <div></div>
+        <div>Конфигурация:</div>
+        <div>Процессор: {{ data.orders.processor }}</div>
+        <div>Герцовка: {{ data.orders.ghz }} ГГц</div>
+        <div>Память: {{ data.orders.ram }} Гб</div>
+        <div>Стоимость: {{ data.orders.cost }} ₽/мес.</div>
+        Доступные ОС: 
+        <div style="margin-top: 10px;">
+            
+            {% if "Ubuntu" in data.orders.availableos %}
+            <img src="{% static 'images/Ubuntu.png' %}" alt="Ubuntu" width="50" height="50">
+            {% endif %}
+
+            {% if "CentOS" in data.orders.availableos %}
+            <img src="{% static 'images/CentOS.png' %}" alt="CentOS" width="50" height="50">
+            {% endif %}
+
+            {% if "Fedora" in data.orders.availableos %}
+            <img src="{% static 'images/Fedora.png' %}" alt="CentOS" width="50" height="50">
+            {% endif %}
+
+            {% if "MS Windows" in data.orders.availableos %}
+            <img src="{% static 'images/MS_Windows.png' %}" alt="CentOS" width="50" height="50">
+            {% endif %}
+            
+        </div>
+
+        
     </div>   
-    <div style="width: 300px;">
-        <img class="order-img" src="{% static data.orders.src %}" alt="My image">
-    </div>
+    <div class="order-img" style="background-color: rgb({{ data.orders.ram }}, 0, {{ data.orders.ghz }})"></div>
 </div>
 {% endblock %}
