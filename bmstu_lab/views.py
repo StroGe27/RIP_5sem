@@ -23,9 +23,6 @@ def GetOrders(request):
 
 def GetOrder(request, id):
     order = Orders.objects.filter(id=id).first()
-    print(int(order.ghz*45 - 45))
-    print(order.ram)
-    print(int((order.ram-16)*0.75))
     return render(request, 'order.html', {'data': {
         'orders': order,
         'rotate': int(order.ghz*30),
