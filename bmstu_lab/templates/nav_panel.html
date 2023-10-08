@@ -1,21 +1,10 @@
-{% comment %} <div class="nav-panel">
-    <div style="margin-top: 20px; margin-left: 10px; width: 50px; height: auto;">
-      <img src="bmstu_lab/static/images/aws.png" alt="AWS">
-    </div>
-    <div style="color: white;">Аренда виртуальных машин</div>
-    <div class="search_content">
-      <form method="get">
-        <label for="text">Введите название модели</label>
-        <input id="text" name="text" type="text"> 
-        <input type="submit" value="Поиск">
-    </div>
-</div> {% endcomment %}
 <div class="logo">
   <div class="search">
   <form action=""  method="get">
     <label for="text">Поиск по модели</label><br>
-    <input id="text" name="sub" type="text" value={{ data.query }}>
+    <input id="text" name="find" type="text" value={{ data.query }}>
     <input type="submit" value="Поиск">
   </form>
   </div>
 </div>
+

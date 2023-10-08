@@ -1,13 +1,21 @@
 {% load static %}
 <div class="order-div">
-    <img class="order-img" src="{% static element.src %}" alt="My image">
+    {% comment %} <div class="order-img" style="background-color: rgb({{ element.ram }}, 0, {{ element.ghz }})"></div> {% endcomment %}
+    {% if "Intel" in element.processor %}   
+    <div class="order-img" style="background-color: rgb(0, 113, 197);"></div>
+    {% endif %}
+    {% if "AMD" in element.processor %}
+    <div class="order-img" style="background-color: rgb(237, 28, 36);"></div>
+    {% endif %}
+
     <div style="margin-left: 10px; text-align: center; font-weight: 1000;"> {{ element.title }} </div>
     
     <div class="order-text-info">
-        <li> {{ element.definition.processor }} </li>
-        <li> {{ element.definition.Ghz }} ГГц</li>
-        <li> {{ element.definition.cores }} ядер</li>
-        <li> {{ element.definition.ram }} Gb</li>
+        <li>Процессор: {{ element.processor }}</li>
+        <li> {{ element.ghz }} ГГц</li>
+        <li> {{ element.ram }} ГБ</li>
+        <li> {{ element.cost }} ₽/мес.</li>
+        {% comment %} <li> id: {{ element.id }}</li> {% endcomment %}
     </div>
     <button class="button-style" onclick="location.href='{% url 'order_url' element.id %}'" >Подробнее</button>
 </div>
