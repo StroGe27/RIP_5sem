@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from bmstu_lab.models import Requests
 from bmstu_lab.models import Users
 from bmstu_lab.models import Moderators
@@ -8,8 +8,8 @@ from django.db.models import Q
 def GetOrders(request):
     input_text = request.GET.get("find")
     input_filter = request.GET.getlist("manufacturer")
-    orders = Orders.objects.all()
-    
+    orders = Orders.objects.order_by('id')
+    orders = orders.filter(status="valid")
     if input_text: orders = orders.filter(Q(title__icontains = input_text))
     else: input_text = ''
 
@@ -29,3 +29,7 @@ def GetOrder(request, id):
         'rotate_2': int((order.ram-16)*0.75),
         }})
 
+def delObject(request, id):
+    input_text = request.GET.get("delete_order")
+    Orders.objects.filter(id=id).update(status="deleted")
+    return redirect('/')
