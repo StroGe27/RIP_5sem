@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    Товар №{{ data.orders.id }}
+{% endblock %}
+
 {% block navigation %}
     <button class="button-style" onclick="location.href='/'" > Вернуться назад </button>
 {% endblock %}
 
-{% block title %}
-    Заказ №{{ data.id }}
-{% endblock %}
 
 {% block content %}
 {% load static %}
-<div style="display: flex;">
+<div style="display: flex; height: 220px;">
     <div class="order-text server-conf">
         <div></div>
         <div>Конфигурация:</div>
@@ -29,18 +30,63 @@
             <img src="{% static 'images/CentOS.png' %}" alt="CentOS" width="50" height="50">
             {% endif %}
 
-            {% if "Fedora" in data.orders.availableos %}
+            {% comment %} {% if "Fedora" in data.orders.availableos %}
             <img src="{% static 'images/Fedora.png' %}" alt="CentOS" width="50" height="50">
             {% endif %}
 
             {% if "MS Windows" in data.orders.availableos %}
             <img src="{% static 'images/MS_Windows.png' %}" alt="CentOS" width="50" height="50">
-            {% endif %}
+            {% endif %} {% endcomment %}
             
+        </div>        
+    </div>
+    {% if "Intel" in data.orders.processor %}   
+    <div class="order-img" style="background-color: rgb(0, 113, 197); height: 210px; width: 385px;">
+        <div class = "element" style="margin-left: 20px; margin-top: 20px;">    
+            <div class = "element_4" style="background-color: rgb(0, 113, 197);"></div>
+            <div class = "element_1" style="transform: rotate({{ data.rotate }}deg);">
+                <div class = "element_3"></div>
+            </div>
+            <div class = "element_2" style="background-color: rgb(0, 113, 197);"><h2>Ghz</h2></div>
         </div>
+        <div class = "element" style="margin-left: 20px; margin-top: 20px">
+            <div class = "element_4" style="background-color: rgb(0, 113, 197);"></div>
+            <div class = "element_1" style="transform: rotate({{ data.rotate_2 }}deg);">
+                <div class = "element_3"></div>
+            </div>
+            <div class = "element_2" style="background-color: rgb(0, 113, 197);"><h2>RAM</h2></div>
+        </div>
+    {% endif %}
 
-        
-    </div>   
-    <div class="order-img" style="background-color: rgb({{ data.orders.ram }}, 0, {{ data.orders.ghz }})"></div>
+    {% if "AMD" in data.orders.processor %}
+    <div class="order-img" style="background-color: rgb(237, 28, 36); height: 210px; width: 385px;">
+        <div class = "element" style="margin-left: 20px; margin-top: 20px; background-color: rgb(227, 105, 109)">    
+            <div class = "element_4" style="background-color: rgb(237, 28, 36);"></div>
+            <div class = "element_1" style="transform: rotate({{ data.rotate }}deg);">
+                <div class = "element_3"></div>
+            </div>
+            <div class = "element_2" style="background-color: rgb(237, 28, 36);"><h2>Ghz</h2></div>
+        </div>
+        <div class = "element" style="margin-left: 20px; margin-top: 20px; background-color: rgb(227, 105, 109)">
+            <div class = "element_4" style="background-color: rgb(237, 28, 36);"></div>
+            <div class = "element_1" style="transform: rotate({{ data.rotate_2 }}deg);">
+                <div class = "element_3"></div>
+            </div>
+            <div class = "element_2" style="background-color: rgb(237, 28, 36);"><h2>RAM</h2></div>
+        </div>
+    {% comment %} <div class="order-img" style="background-color: rgb(237, 28, 36);">
+        <div class = "element">
+            <div class = "element_1 " style="transform: rotate({{ data.rotate }}deg);">
+                <div class = "element_3"></div>
+            </div>
+            <div class = "element_2"></div>
+        </div> {% endcomment %}
+    {% endif %}
+    </div>
+
 </div>
+<style>
+
+</style>
+
 {% endblock %}

@@ -1,7 +1,13 @@
 {% load static %}
 <div class="order-div">
-    {% comment %} <img class="order-img" src="{% static element.src %}" alt="My image"> {% endcomment %}
-    <div class="order-img" style="background-color: rgb({{ element.ram }}, 0, {{ element.ghz }})"></div>
+    {% comment %} <div class="order-img" style="background-color: rgb({{ element.ram }}, 0, {{ element.ghz }})"></div> {% endcomment %}
+    {% if "Intel" in element.processor %}   
+    <div class="order-img" style="background-color: rgb(0, 113, 197);"></div>
+    {% endif %}
+    {% if "AMD" in element.processor %}
+    <div class="order-img" style="background-color: rgb(237, 28, 36);"></div>
+    {% endif %}
+
     <div style="margin-left: 10px; text-align: center; font-weight: 1000;"> {{ element.title }} </div>
     
     <div class="order-text-info">

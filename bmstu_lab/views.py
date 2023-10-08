@@ -16,9 +16,19 @@ def GetOrders(request):
     if input_filter:
         filter_list = [Q(processor__icontains=filter_item) for filter_item in input_filter]
         orders = orders.filter(*filter_list)
-    return render(request, 'orders.html', {'data': {'orders': orders, 'query': input_text}})
+    return render(request, 'orders.html', {'data': {
+        'orders': orders,
+        'query': input_text,
+        'filter_list': input_filter}})
 
 def GetOrder(request, id):
     order = Orders.objects.filter(id=id).first()
-    return render(request, 'order.html', {'data': {'orders': order}})
+    print(int(order.ghz*45 - 45))
+    print(order.ram)
+    print(int((order.ram-16)*0.75))
+    return render(request, 'order.html', {'data': {
+        'orders': order,
+        'rotate': int(order.ghz*30),
+        'rotate_2': int((order.ram-16)*0.75),
+        }})
 
