@@ -15,7 +15,11 @@
         <li> {{ element.ghz }} ГГц</li>
         <li> {{ element.ram }} ГБ</li>
         <li> {{ element.cost }} ₽/мес.</li>
-        {% comment %} <li> id: {{ element.id }}</li> {% endcomment %}
+        {% comment %} <li> {{ element.id }}</li>
+        <li> {{ element.status }}</li> {% endcomment %}
     </div>
-    <button class="button-style" onclick="location.href='{% url 'order_url' element.id %}'" >Подробнее</button>
+    <div style = "display: flex;">
+        <button class="button-style" onclick="location.href='{% url 'order_url' element.id %}'" >Подробнее</button>
+        <button class="button-style" style="background-color: red;" onclick="location.href='{% url 'delete_order' element.id %}'" >Удалить</button>
+    </div>
 </div>
