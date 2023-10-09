@@ -29,7 +29,7 @@ def GetOrder(request, id):
     order = Orders.objects.filter(id=id).first()
     return render(request, 'order.html', {'data': {
         'orders': order,
-        'rotate': int(order.ghz*30),
+        'rotate_1': int(order.ghz*30),
         'rotate_2': int((order.ram-16)*0.75),
         }})
 
