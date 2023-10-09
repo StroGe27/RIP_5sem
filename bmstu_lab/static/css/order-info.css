@@ -65,3 +65,7 @@
     position: absolute;
     top: -5px;
 }
+.range-value {
+    width: 75px;
+    text-align: center;
+}
