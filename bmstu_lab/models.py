@@ -53,4 +53,4 @@ class Orders(models.Model):
         db_table = 'orders' 
         verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
-    
+ 
