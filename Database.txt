@@ -2,12 +2,18 @@
 Создание таблиц:
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(30) NOT NULL
+    name VARCHAR(30) NOT NULL,
+    mail VARCHAR(30 NOT NULL),
+    password VARCHAR(30) NOT NULL,
+    who_moderator INTEGER NOT NULL,
+    FOREIGN KEY (who_moderator) REFERENCES moderators (id)
 );
 
 CREATE TABLE moderators (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(30) NOT NULL
+    name VARCHAR(30) NOT NULL,
+    mail VARCHAR(30) NOT NULL,
+    password VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE request (
@@ -35,6 +41,7 @@ CREATE TABLE orders (
 );
 
 Заполнение orders:
+
 INSERT INTO orders (id, title, status, processor, ghz, ram, cost, rate, availableos)
 VALUES (1, 'EL11-SSD-10GE', 'valid', 'Intel Xeon E-2236', 3.5, 32, 11900, '0', 'Windows'),
        (2, 'EL42-NVMe', 'valid', 'Intel Xeon E-2386G', 3.4, 32, 15600, '0', 'Windows'),

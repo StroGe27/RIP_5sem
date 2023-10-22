@@ -31,6 +31,7 @@
 background-color: #3e8e41;
 }
 
+
 .order-img {
     width: 280px;
     height: auto;
@@ -54,4 +55,13 @@ background-color: #3e8e41;
     margin-bottom: 10px;
     line-height: 1.5;
     list-style-type: disc;
+}
+
+.fill-logo {
+    width: 800px;
+    height: 400px;
+    margin: -100px -100px -100px -100px;
+    transform: rotate(35deg);
+    background-repeat: repeat;
+    background-size: 50px 50px;
 }
