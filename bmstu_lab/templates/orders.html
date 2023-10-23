@@ -14,11 +14,8 @@
             {% for order in data.orders %}
                 {% include 'order_element.html' with element=order %}
                 {% empty %}
-                <div class="order-div">
-                    <div style="margin: 150px 10px; text-align: center; font-weight: 1000;">
-                        Товара с таким названием не существует
-                    </div>
-                </div>
+                <img src="/bmstu_lab/static/images/hello-chat-sf.gif" class="order-div" alt="Ну нет товара">
+
             {% endfor %}
         </div>
     </div>
