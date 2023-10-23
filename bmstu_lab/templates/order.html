@@ -15,10 +15,13 @@
     <div class="order-text server-conf">
         <div></div>
         <div>Конфигурация:</div>
+        
         <div>Процессор: {{ data.orders.processor }}</div>
         <div>Герцовка: {{ data.orders.ghz }} ГГц</div>
         <div>Память: {{ data.orders.ram }} Гб</div>
         <div>Стоимость: {{ data.orders.cost }} ₽/мес.</div>
+        <div>IP: {{ data.orders.ip }}</div>
+
         Поддерживаемые ОС: 
         <div style="margin-top: 10px;">
             
@@ -34,7 +37,7 @@
             <img src="{% static 'images/Fedora.png' %}" alt="CentOS" width="50" height="50">
             {% endif %}
 
-            {% if "MS Windows" in data.orders.availableos %}
+            {% if "Windows" in data.orders.availableos %}
             <img src="{% static 'images/MS_Windows.png' %}" alt="CentOS" width="50" height="50">
             {% endif %}
             
@@ -67,6 +70,7 @@
                 <div class = "range-value"><h1>256</h1></div>
             </div>
         </div>
+    </div>
     {% endif %}
 
     {% if "AMD" in data.orders.processor %}
@@ -95,12 +99,20 @@
             </div>
             
         </div>
-    {% endif %}
     </div>
-
+    {% endif %}
+    <div class="order-text server-conf" style="margin-left: 10px;">
+        Он находится в кластере с:
+        {% for i in data.clusters %}
+        <li>
+            {{ i.ip }} - {{ i.title }}
+            {% if i.title != data.orders.title %}
+                <button class="button-style-cluster" onclick="location.href='{% url 'order_url' i.id %}'" >Подробнее</button>
+            {% else %}
+            <button class="button-style-cluster" onclick="location.href='{% url 'order_url' i.id %}'" >Вы здесь</button>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </div>
 </div>
-<style>
-
-</style>
-
 {% endblock %}

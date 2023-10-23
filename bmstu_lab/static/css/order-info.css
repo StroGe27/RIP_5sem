@@ -69,3 +69,22 @@
     width: 75px;
     text-align: center;
 }
+
+.button-style-cluster {
+    width: 120px;
+    height: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+.button-style-cluster:hover {
+    background-color: #3e8e41;
+    }
+    

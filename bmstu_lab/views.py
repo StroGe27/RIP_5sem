@@ -3,7 +3,12 @@ from bmstu_lab.models import Requests
 from bmstu_lab.models import Users
 from bmstu_lab.models import Moderators
 from bmstu_lab.models import Orders
+from bmstu_lab.models import Clusters
 from django.db.models import Q
+
+import psycopg2
+
+
 
 def GetOrders(request):
     input_text = request.GET.get("find")
@@ -27,7 +32,12 @@ def GetOrders(request):
 
 def GetOrder(request, id):
     order = Orders.objects.filter(id=id).first()
+
+    clusters = Orders.objects.filter(cluster=order.cluster)
+
+
     return render(request, 'order.html', {'data': {
+        'clusters': clusters,
         'orders': order,
         'rotate_1': int(order.ghz*30),
         'rotate_2': int((order.ram-16)*0.75),
@@ -37,3 +47,4 @@ def delObject(request, id):
     # input_text = request.GET.get("delete_order")
     Orders.objects.filter(id=id).update(status="deleted")
     return redirect('/')
+

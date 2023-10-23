@@ -2,6 +2,10 @@ from django.db import models
 
 class Users(models.Model):
     name = models.CharField(max_length=30)
+    mail = models.CharField(max_length=30)
+    password = models.CharField(max_length=30)
+    role = models.CharField()
+    who_moderator = models.ForeignKey('Moderators', on_delete=models.CASCADE)
     def __str__(self):
         return self.name
     class Meta:
@@ -14,6 +18,8 @@ class Users(models.Model):
 
 class Moderators(models.Model):
     name = models.CharField(max_length=30)
+    mail = models.CharField(max_length=30)
+    password = models.CharField(max_length=30)
     class Meta:
         app_label = 'bmstu_lab'
         managed = False
@@ -42,9 +48,11 @@ class Orders(models.Model):
     processor = models.CharField(max_length=100)
     ghz = models.FloatField()
     ram = models.IntegerField()
-    rate = models.CharField(max_length=100)
     availableos = models.CharField(max_length=10)
     cost = models.IntegerField()
+    ip = models.CharField(max_length=16)
+    cluster = models.IntegerField()
+    
     def __str__(self):
         return self.title, self.status
     class Meta:
@@ -54,3 +62,7 @@ class Orders(models.Model):
         verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
  
+
+class Clusters(models.Model):
+    location = models.CharField(max_length=100)
+    description = models.CharField(max_length=255)

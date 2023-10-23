@@ -1,11 +1,10 @@
 {% load static %}
 <div class="order-div">
-    {% comment %} <div class="order-img" style="background-color: rgb({{ element.ram }}, 0, {{ element.ghz }})"></div> {% endcomment %}
     {% if "Intel" in element.processor %}   
-    <div class="order-img" style="background-color: rgb(0, 113, 197);"></div>
+    <div class="order-img"> <div class="fill-logo" style="background-image: url(/bmstu_lab/static/images/INTEL.png);"> </div> </div>
     {% endif %}
     {% if "AMD" in element.processor %}
-    <div class="order-img" style="background-color: rgb(237, 28, 36);"></div>
+    <div class="order-img"> <div class="fill-logo" style="background-image: url(/bmstu_lab/static/images/AMD.png);"> </div> </div>
     {% endif %}
 
     <div style="margin-left: 10px; text-align: center; font-weight: 1000;"> {{ element.title }} </div>
