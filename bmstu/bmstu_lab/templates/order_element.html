@@ -1,11 +1,22 @@
 {% load static %}
 <div class="order-div">
-    {% if "Intel" in element.processor %}   
-    <div class="order-img"> <div class="fill-logo" style="background-image: url(http://127.0.0.1:9000/test/INTEL.png);"> </div> </div>
+    {% if "null" in element.img %}
+        {% if "Intel" in element.processor %}   
+            <div class="order-img">
+                <div class="fill-logo" style="background-image: url(http://127.0.0.1:9000/test/INTEL.png);"> </div>
+            </div>
+        {% endif %}
+        {% if "AMD" in element.processor %}
+            <div class="order-img">
+                <div class="fill-logo" style="background-image: url(http://127.0.0.1:9000/test/AMD.png);"> </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="order-img">
+            <div class="fill-img" style="background-image: url(http://127.0.0.1:9000/test/user_img/{{ element.img }}); width: 800px; height: 400px;"> </div>
+        </div>
     {% endif %}
-    {% if "AMD" in element.processor %}
-    <div class="order-img"> <div class="fill-logo" style="background-image: url(http://127.0.0.1:9000/test/AMD.png);"> </div> </div>
-    {% endif %}
+    
 
     <div style="margin-left: 10px; text-align: center; font-weight: 1000;"> {{ element.title }} </div>
     

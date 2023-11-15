@@ -32,8 +32,8 @@ def GetOrders(request):
 
 def GetOrder(request, id):
     order = Orders.objects.filter(id=id).first()
-
-    clusters = Orders.objects.filter(cluster=order.cluster)
+    print("Hi, there!")
+    clusters = Orders.objects.filter(cluster=order.cluster_id)
 
 
     return render(request, 'order.html', {'data': {
