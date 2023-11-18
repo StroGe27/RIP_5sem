@@ -35,6 +35,7 @@ class Requests_status(models.Model):
         return self.name_status
 
 class Requests(models.Model):
+    id = models.BigAutoField(primary_key=True)
     date_create = models.DateField()
     date_formation = models.DateField()
     date_complete = models.DateField()

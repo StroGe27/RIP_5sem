@@ -82,12 +82,11 @@ WSGI_APPLICATION = 'lab3.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'student',
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'root',
         'HOST': 'localhost',
-        'PORT': 5432, # Стандартный порт PostgreSQL
-        # 'OPTIONS': {'charset': 'utf8'},
+        'PORT': 5432,
         'TEST_CHARSET': 'utf8',
     }
 }
