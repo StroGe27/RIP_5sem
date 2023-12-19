@@ -3,22 +3,24 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 
 from api.serializers import OrderSerializer
-from api.models import Orders
 from api.serializers import RequestSerializer
+from api.serializers import UserSerializer
+
+from api.models import Orders
 from api.models import Requests
+from api.models import Users
 
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
+
 class OrderList(APIView):
     model_class = Orders
     serializer_class = OrderSerializer
-    
     def get(self, request, format=None):
         orders = self.model_class.objects.all()
         serializer = self.serializer_class(orders, many=True)
         return Response(serializer.data)
-    
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -42,13 +44,47 @@ class OrderDetail(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
     def delete(self, request, id, format=None):
         order = get_object_or_404(self.model_class, id=id)
         order.status = "deleted"
         order.save()        
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+@api_view(["GET"])   
+def OrderSearch(request):
+    search_query = request.GET.get('title', '')  # Пример GET запроса: /your-endpoint/?search=ваша_строка
+    proc_type = request.GET.get('type', '')
+    # cost_range = request.GET.get('cost', '')
+
+    left_cost = request.GET.get('lcost', '') 
+    right_cost = request.GET.get('rcost', '')
+
+    orders = Orders.objects.filter(title__icontains=search_query)
+    if proc_type == "Intel":
+        orders = orders.filter(processor_type_id=1)
+    elif proc_type == "AMD":
+        orders = orders.ofilter(processor_type_id=2)
+
+    # left_range, right_range = cost_range.split(',')
+    print("hello", left_cost, right_cost)
+    orders = orders.filter(cost__range=(left_cost, right_cost))
+
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(["GET"])   
+def OrderRangedCost(request):
+    left_range = request.GET.get('lcost', '') 
+    right_range = request.GET.get('rcost', '')
+    orders = Orders.objects.filter(cost__range=(left_range, right_range))
+    # if left_range and right_range:
+    #     orders = Orders.objects.filter(cost__range=(left_range, right_range))
+    # else:
+    #     orders = Orders.objects.filter(cost__range=(1, 100000))
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 class RequestList(APIView):
     model_class = Requests
     serializer_class = RequestSerializer
@@ -60,6 +96,7 @@ class RequestList(APIView):
     
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
+        print(request)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
