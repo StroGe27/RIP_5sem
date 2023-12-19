@@ -42,6 +42,7 @@ class Requests(models.Model):
     moderator = models.ForeignKey('Moderators', on_delete=models.CASCADE)
     user = models.ForeignKey('Users', on_delete=models.CASCADE)
     status = models.ForeignKey('Requests_status', on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.status, self.date_complete
     class Meta:
@@ -61,6 +62,7 @@ class Order_to_request(models.Model):
         db_table = 'order_to_request' 
  
 class Orders(models.Model):
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=50)
     status = models.CharField(max_length=10)
     processor = models.CharField(max_length=100)
@@ -70,7 +72,7 @@ class Orders(models.Model):
     cost = models.IntegerField()
     ip = models.CharField(max_length=20)
     img = models.CharField(max_length=20)
-    cluster = models.ForeignKey('Clusters', on_delete=models.CASCADE)
+    processor_type = models.ForeignKey('Processor', on_delete=models.CASCADE)
     
     def __str__(self):
         return self.title, self.status
@@ -90,9 +92,8 @@ class AvailableOS(models.Model):
     def __str__(self):
         return self.name
 
-class Clusters(models.Model):
-    location = models.CharField(max_length=50)
-    description = models.CharField(max_length=100)
+class Processor(models.Model):
+    name = models.CharField(max_length=10)
     class Meta:
         app_label = 'bmstu_lab'
         managed = False
