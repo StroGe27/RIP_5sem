@@ -13,6 +13,19 @@ from api.models import Users
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 
+from drf_yasg.utils import swagger_auto_schema
+from api.serializers import OrdersSerializer
+class OrdersList(APIView): 
+    @swagger_auto_schema(request_body=OrdersSerializer)
+    def post(self, request, format=None):
+	    pass
+
+class OrdersDetail(APIView):
+    @swagger_auto_schema(request_body=OrdersSerializer)
+    def put(self, request, pk, format=None):
+	    pass
+
+@swagger_auto_schema(method='put', request_body=OrderSerializer)
 
 class OrderList(APIView):
     model_class = Orders
@@ -55,7 +68,6 @@ class OrderDetail(APIView):
 def OrderSearch(request):
     search_query = request.GET.get('title', '')  # Пример GET запроса: /your-endpoint/?search=ваша_строка
     proc_type = request.GET.get('type', '')
-    # cost_range = request.GET.get('cost', '')
 
     left_cost = request.GET.get('lcost', '') 
     right_cost = request.GET.get('rcost', '')
@@ -66,7 +78,6 @@ def OrderSearch(request):
     elif proc_type == "AMD":
         orders = orders.ofilter(processor_type_id=2)
 
-    # left_range, right_range = cost_range.split(',')
     print("hello", left_cost, right_cost)
     orders = orders.filter(cost__range=(left_cost, right_cost))
 
@@ -125,13 +136,3 @@ class RequestDetail(APIView):
         requests.save()   
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-
-# @api_view(['Put'])
-# def put_detail(request, pk, format=None):
-#     stock = get_object_or_404(Orders, pk=pk)
-#     serializer = OrderSerializer(stock, data=request.data, partial=True)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response(serializer.data)
-#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

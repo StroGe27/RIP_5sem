@@ -25,3 +25,19 @@ class UserSerializer(serializers.ModelSerializer):
         # Поля, которые мы сериализуем
         fields = ["id", "name", "mail", "password", "role"]
 
+
+from collections import OrderedDict
+class OrdersSerializer(serializers.ModelSerializer):
+    class Meta:
+        # Модель, которую мы сериализуем
+        model = Orders
+        # Поля, которые мы сериализуем
+        fields = ["id", "title", "status", "processor", "ghz", "ram", "ip", "processor_type_id", "availableos", "cost", "img"]
+
+        def get_fields(self):
+            new_fields = OrderedDict()
+            for name, field in super().get_fields().items():
+                field.required = False
+                new_fields[name] = field
+            return new_fields 
+
