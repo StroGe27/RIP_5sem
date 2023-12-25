@@ -1,22 +1,19 @@
+# Добавляем импорты для работы с Django и Django REST Framework
 from rest_framework.response import Response
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 
-#API
+# Добавляем импорт для работы с API
+
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from api.serializers import *
 from api.models import Orders, Requests, CustomUser
 from api.permissions import *
 
-#For auth
+# Добавляем импорты для аутентификации
 
-#Swagger
-from drf_yasg.utils import swagger_auto_schema
-
-
-# поменять
-from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -25,111 +22,113 @@ import redis
 import uuid
 from django.contrib.sessions.models import Session
 
+# Добавляем импорты для работы с Swagger
+
+from drf_yasg.utils import swagger_auto_schema
+
+# Добавляем импорт для работы с Minio
+
 from minio import Minio
 from minio.error import S3Error
 from datetime import datetime
 
 session_storage = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
 
-class OrderList(APIView):
-    model_class = Orders
-    serializer_class = OrderSerializer
+@api_view(['GET'])
+def getOrders(request):
+    orders = Orders.objects.filter(status='valid')
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data)
 
-    def get(self, request, format=None):
-        orders = self.model_class.objects.filter(status='valid')
-        serializer = self.serializer_class(orders, many=True)
+@api_view(['POST'])
+@permission_classes([IsManager])
+def postOrders(request):
+    serializer = OrderSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def getOrdersDetiled(request, id, format=None):
+    order = Orders.objects.get(id=id)
+    serializer = OrderSerializer(order)
+    return Response(serializer.data)
+@api_view(['PUT'])
+def putOrdersDetiled(request, id, format=None):
+    order = get_object_or_404(Orders, id=id)
+    serializer = OrderSerializer(order, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
         return Response(serializer.data)
-    
-    @permission_classes([IsManager])
-    def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class OrderDetail(APIView):
-    model_class = Orders
-    serializer_class = OrderSerializer
+@api_view(["DELETE"])
+def deleteOrdersDetiled(request, id, format=None):
+    order = get_object_or_404(Orders, id=id)
+    order.status = "deleted"
+    order.save()        
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def get(self, request, id, format=None):
-        order = get_object_or_404(self.model_class, id=id)
-        serializer = self.serializer_class(order)
-        return Response(serializer.data)
-    
-    def put(self, request, id, format=None):
-        order = get_object_or_404(self.model_class, id=id)
-        serializer = self.serializer_class(order, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, id, format=None):
-        order = get_object_or_404(self.model_class, id=id)
-        order.status = "deleted"
-        order.save()        
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    
-@api_view(["GET"])   
-def OrderSearch(request):
-    search_query = request.GET.get('title', '')  # Пример GET запроса: /your-endpoint/?search=ваша_строка&
+@api_view(['GET'])   
+def searchOrders(request):
+    search_query = request.GET.get('title', '')
     proc_type = request.GET.get('type', '')
-
     left_cost = request.GET.get('lcost', '') 
     right_cost = request.GET.get('rcost', '')
+    
     orders = Orders.objects.filter(status='valid')
-    orders = orders.filter(title__icontains=search_query)
+    
+    if search_query:
+        orders = orders.filter(title__icontains=search_query)
+        
     if proc_type == "Intel":
         orders = orders.filter(processor_type_id=1)
     elif proc_type == "AMD":
         orders = orders.filter(processor_type_id=2)
-
-    print(proc_type, left_cost, right_cost)
-    # orders = orders.filter(cost__range=(int(left_cost), int(right_cost)))
-
+    
+    # if left_cost and right_cost:
+    #     orders = orders.filter(cost__range=(int(left_cost), int(right_cost)))
+    
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-class RequestList(APIView):
-    model_class = Requests
-    serializer_class = RequestSerializer
-    
-    def get(self, request, format=None):
-        request = self.model_class.objects.all().order_by('date_create')
-        serializer = self.serializer_class(request, many=True)
+@api_view(['GET'])   
+def getRequests(request, format=None):
+    requests = Requests.objects.all().order_by('date_create')
+    serializer = RequestSerializer(requests, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def postRequests(request, format=None):
+    serializer = OrderSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def getRequestsDetiled(request, id, format=None):
+    requests = get_object_or_404(Orders, id=id)
+    serializer = OrderSerializer(requests)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def putRequestsDetiled(request, id, format=None):
+    requests = get_object_or_404(Orders, id=id)
+    serializer = OrderSerializer(requests, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
         return Response(serializer.data)
-    
-    def post(self, request, format=None):
-        serializer = self.serializer_class(data=request.data)
-        print(request)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class RequestDetail(APIView):
-    model_class = Requests
-    serializer_class = RequestSerializer
-
-    def get(self, request, id, format=None):
-        requests = get_object_or_404(self.model_class.objects.all(), id=id)
-        serializer = self.serializer_class(requests)
-        return Response(serializer.data)
-    
-    def put(self, request, id, format=None):
-        requests = get_object_or_404(self.model_class, id=id)
-        serializer = self.serializer_class(requests, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, id, format=None):
-        requests = get_object_or_404(self.model_class, id=id)
-        requests.status_id = 2  # обновляем статус на deleted
-        requests.save()   
-        return Response(status=status.HTTP_204_NO_CONTENT)
+@api_view(["DELETE"])
+def deleteRequestsDetiled(request, id, format=None):
+    requests = get_object_or_404(Orders, id=id)
+    requests.status_id = 2
+    requests.save()   
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Authorization methods
 class UserViewSet(viewsets.ModelViewSet):
@@ -179,7 +178,7 @@ def login_view(request):
         random_key = str(uuid.uuid4())
         session_storage.set(random_key, username)
         user_data = {
-            "id_user": user.id_user,
+            "id_user": user.id,
             "email": user.email,
             "full_name": user.full_name,
             #"phone_number": user.phone_number,

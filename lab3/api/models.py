@@ -13,6 +13,7 @@ class NewUserManager(UserManager):
         return user
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    # id = models.AutoField(primary_key=True)
     email = models.EmailField(("email адрес"), unique=True)
     password = models.CharField(max_length=255, verbose_name="Пароль")    
     is_staff = models.BooleanField(default=False, verbose_name="Является ли пользователь менеджером?")
@@ -67,7 +68,7 @@ class Orders(models.Model):
     ram = models.IntegerField()
     availableos = models.ForeignKey('AvailableOS', on_delete=models.CASCADE)
     cost = models.IntegerField()
-    ip = models.CharField(max_length=20)
+    # ip = models.CharField(max_length=20)
     img = models.CharField(max_length=20)
     processor_type = models.ForeignKey('Processor', on_delete=models.CASCADE)
     

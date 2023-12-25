@@ -94,7 +94,7 @@ class Migration(migrations.Migration):
                 ('ghz', models.FloatField()),
                 ('ram', models.IntegerField()),
                 ('cost', models.IntegerField()),
-                ('ip', models.CharField(max_length=20)),
+                # ('ip', models.CharField(max_length=20)),
                 ('img', models.CharField(max_length=20)),
                 ('availableos', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.availableos')),
                 ('processor_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.processor')),
