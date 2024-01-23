@@ -70,8 +70,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'rentvps',
-        'USER': 'gosha',
-        'PASSWORD': 'gosha',
+        'USER': 'postgres',
+        'PASSWORD': 'root',
     }
 }
 
