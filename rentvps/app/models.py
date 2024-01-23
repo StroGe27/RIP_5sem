@@ -17,7 +17,7 @@ class Tariff(models.Model):
     price = models.IntegerField(verbose_name="Цена в месяц", blank=True, null=True)
 
     status = models.IntegerField( verbose_name="Статус", choices=STATUS_CHOICES, default=1)
-    image = models.ImageField(verbose_name="Картинка", default="tariffs/default.png", upload_to="tariffs", blank=True, null=True)
+    image = models.ImageField(verbose_name="Картинка", default="tariffs/default.jpg", upload_to="tariffs", blank=True, null=True)
 
     def __str__(self):
         return self.name

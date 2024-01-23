@@ -167,10 +167,10 @@ def search_orders(request):
     if status_id != -1:
         orders = orders.filter(status=status_id)
 
-    if date_start:
+    if date_start and parse_datetime(date_start):
         orders = orders.filter(date_formation__gte=parse_datetime(date_start))
 
-    if date_end:
+    if date_end and parse_datetime(date_end):
         orders = orders.filter(date_formation__lte=parse_datetime(date_end))
 
     serializer = OrdersSerializer(orders, many=True)

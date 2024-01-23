@@ -70,11 +70,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'rentvps',
-        'USER': 'postgres',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': 5432,
-        'TEST_CHARSET': 'utf8',
+        'USER': 'gosha',
+        'PASSWORD': 'gosha',
     }
 }
 
@@ -155,7 +152,7 @@ CACHES = {
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_STORAGE_BUCKET_NAME = 'images'
-AWS_ACCESS_KEY_ID = 'bve2hg7rN7imi66QrFOl'
-AWS_SECRET_ACCESS_KEY = 'Zu5ZbBbVXs1d5s01CQDPOOjMEoYiyDcfUA1PuXiL'
+AWS_ACCESS_KEY_ID = 'h5CdpYHrzqvczXYeQNOv'
+AWS_SECRET_ACCESS_KEY = 'QYMr43khS5OD8F4Xgi3ZMsG68NBmzabRdC6jWDHm'
 AWS_S3_ENDPOINT_URL = 'http://127.0.0.1:9000'
 
