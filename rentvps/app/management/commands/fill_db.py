@@ -43,7 +43,7 @@ def add_tariffs():
     print("Услуги добавлены")
 
 
-def add_orders():
+def add_virtuals():
     users = CustomUser.objects.filter(is_superuser=False)
     moderators = CustomUser.objects.filter(is_superuser=True)
 
@@ -54,31 +54,31 @@ def add_orders():
     tariffs = Tariff.objects.all()
 
     for _ in range(30):
-        order = Order.objects.create()
-        order.status = random.randint(2, 5)
-        order.owner = random.choice(users)
+        virtual = Virtual.objects.create()
+        virtual.status = random.randint(2, 5)
+        virtual.owner = random.choice(users)
 
-        if order.status in [3, 4]:
-            order.date_complete = random_date()
-            order.date_formation = order.date_complete - random_timedelta()
-            order.date_created = order.date_formation - random_timedelta()
-            order.moderator = random.choice(moderators)
-            order.clinical_trial = random.randint(0, 1)
+        if virtual.status in [3, 4]:
+            virtual.date_complete = random_date()
+            virtual.date_formation = virtual.date_complete - random_timedelta()
+            virtual.date_created = virtual.date_formation - random_timedelta()
+            virtual.moderator = random.choice(moderators)
+            virtual.clinical_trial = random.randint(0, 1)
         else:
-            order.date_formation = random_date()
-            order.date_created = order.date_formation - random_timedelta()
+            virtual.date_formation = random_date()
+            virtual.date_created = virtual.date_formation - random_timedelta()
 
         for i in range(random.randint(1, 3)):
             try:
-                item = TariffOrder.objects.create()
-                item.order = order
+                item = TariffVirtual.objects.create()
+                item.virtual = virtual
                 item.tariff = random.choice(tariffs)
                 item.months = random.randint(1, 12)
                 item.save()
             except Exception as e:
                 print(e)
 
-        order.save()
+        virtual.save()
 
     print("Заявки добавлены")
 
@@ -89,7 +89,7 @@ class Command(BaseCommand):
         management.call_command("add_users")
 
         add_tariffs()
-        add_orders()
+        add_virtuals()
 
 
 

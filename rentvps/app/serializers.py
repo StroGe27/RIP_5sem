@@ -4,48 +4,65 @@ from .models import *
 
 
 class TariffSerializer(serializers.ModelSerializer):
+    months = serializers.SerializerMethodField()
+
+    def get_months(self, tariff):
+        return self.context.get("months", "")
+
     class Meta:
         model = Tariff
         fields = "__all__"
 
 
-class UserSerializer(serializers.ModelSerializer):
-    access_token = serializers.SerializerMethodField()
-
-    def get_access_token(self, user):
-        return self.context.get("access_token", "")
-
+class UserCheckSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id', 'name', 'email', 'is_moderator', 'access_token')
+        fields = ('id', 'name', 'email', 'is_moderator')
 
 
-class OrderSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('name',)
+
+
+class VirtualSerializer(serializers.ModelSerializer):
     tariffs = serializers.SerializerMethodField()
     owner = UserSerializer(read_only=True, many=False)
     moderator = UserSerializer(read_only=True, many=False)
 
-    def get_tariffs(self, order):
-        items = TariffOrder.objects.filter(order_id=order.pk)
-        return TariffSerializer([item.tariff for item in items], many=True).data
+    def get_tariffs(self, virtual):
+        items = TariffVirtual.objects.filter(virtual_id=virtual.pk)
+
+        tariffs = []
+        for item in items:
+            serializer = TariffSerializer(
+                item.tariff,
+                context={
+                    "months": item.months
+                }
+            )
+            tariffs.append(serializer.data)
+
+        return tariffs
 
     class Meta:
-        model = Order
+        model = Virtual
         fields = "__all__"
 
 
-class OrdersSerializer(serializers.ModelSerializer):
+class VirtualsSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True, many=False)
     moderator = UserSerializer(read_only=True, many=False)
 
     class Meta:
-        model = Order
+        model = Virtual
         fields = "__all__"
 
 
-class TariffOrderSerializer(serializers.ModelSerializer):
+class TariffVirtualSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TariffOrder
+        model = TariffVirtual
         fields = "__all__"
 
 

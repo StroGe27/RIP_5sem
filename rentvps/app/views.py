@@ -1,4 +1,3 @@
-import requests
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.utils.dateparse import parse_datetime
@@ -13,18 +12,18 @@ from .serializers import *
 from .utils import identity_user
 
 
-def get_draft_order(request):
+def get_draft_virtual(request):
     user = identity_user(request)
 
     if user is None:
         return None
 
-    order = Order.objects.filter(owner_id=user.pk).filter(status=1).first()
+    virtual = Virtual.objects.filter(owner_id=user.pk).filter(status=1).first()
 
-    if order is None:
+    if virtual is None:
         return None
 
-    return order
+    return virtual
 
 
 @api_view(["GET"])
@@ -35,11 +34,11 @@ def search_tariffs(request):
 
     serializer = TariffSerializer(tariffs, many=True)
 
-    draft_order = get_draft_order(request)
+    draft_virtual = get_draft_virtual(request)
 
     resp = {
         "tariffs": serializer.data,
-        "draft_order_id": draft_order.pk if draft_order else None
+        "draft_virtual_id": draft_virtual.pk if draft_virtual else None
     }
 
     return Response(resp)
@@ -99,30 +98,28 @@ def delete_tariff(request, tariff_id):
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def add_tariff_to_order(request, tariff_id):
+def add_tariff_to_virtual(request, tariff_id):
     if not Tariff.objects.filter(pk=tariff_id).exists():
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     tariff = Tariff.objects.get(pk=tariff_id)
 
-    draft_order = get_draft_order(request)
+    draft_virtual = get_draft_virtual(request)
 
-    if draft_order is None:
-        draft_order = Order.objects.create()
-        draft_order.owner = identity_user(request)
-        draft_order.save()
+    if draft_virtual is None:
+        draft_virtual = Virtual.objects.create()
+        draft_virtual.owner = identity_user(request)
+        draft_virtual.save()
 
-    if TariffOrder.objects.filter(order=draft_order, tariff=tariff).exists():
+    if TariffVirtual.objects.filter(virtual=draft_virtual, tariff=tariff).exists():
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    cons = TariffOrder.objects.create()
-    cons.order = draft_order
+    cons = TariffVirtual.objects.create()
+    cons.virtual = draft_virtual
     cons.tariff = tariff
     cons.save()
 
-    serializer = OrderSerializer(draft_order)
-
-    return Response(serializer.data)
+    return Response(status=status.HTTP_200_OK)
 
 
 @api_view(["GET"])
@@ -152,52 +149,52 @@ def update_tariff_image(request, tariff_id):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def search_orders(request):
+def search_virtuals(request):
     user = identity_user(request)
 
     status_id = int(request.GET.get("status", -1))
     date_start = request.GET.get("date_start")
     date_end = request.GET.get("date_end")
 
-    orders = Order.objects.exclude(status__in=[1, 5])
+    virtuals = Virtual.objects.exclude(status__in=[1, 5])
 
     if not user.is_moderator:
-        orders = orders.filter(owner_id=user.pk)
+        virtuals = virtuals.filter(owner_id=user.pk)
 
     if status_id != -1:
-        orders = orders.filter(status=status_id)
+        virtuals = virtuals.filter(status=status_id)
 
     if date_start and parse_datetime(date_start):
-        orders = orders.filter(date_formation__gte=parse_datetime(date_start))
+        virtuals = virtuals.filter(date_formation__gte=parse_datetime(date_start))
 
     if date_end and parse_datetime(date_end):
-        orders = orders.filter(date_formation__lte=parse_datetime(date_end))
+        virtuals = virtuals.filter(date_formation__lte=parse_datetime(date_end))
 
-    serializer = OrdersSerializer(orders, many=True)
+    serializer = VirtualsSerializer(virtuals, many=True)
 
     return Response(serializer.data)
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def get_order_by_id(request, order_id):
-    if not Order.objects.filter(pk=order_id).exists():
+def get_virtual_by_id(request, virtual_id):
+    if not Virtual.objects.filter(pk=virtual_id).exists():
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    order = Order.objects.get(pk=order_id)
-    serializer = OrderSerializer(order)
+    virtual = Virtual.objects.get(pk=virtual_id)
+    serializer = VirtualSerializer(virtual)
 
     return Response(serializer.data)
 
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
-def update_order(request, order_id):
-    if not Order.objects.filter(pk=order_id).exists():
+def update_virtual(request, virtual_id):
+    if not Virtual.objects.filter(pk=virtual_id).exists():
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    order = Order.objects.get(pk=order_id)
-    serializer = OrderSerializer(order, data=request.data, partial=True)
+    virtual = Virtual.objects.get(pk=virtual_id)
+    serializer = VirtualSerializer(virtual, data=request.data, partial=True)
 
     if serializer.is_valid():
         serializer.save()
@@ -207,12 +204,12 @@ def update_order(request, order_id):
 
 @api_view(["PUT"])
 @permission_classes([IsRemoteService])
-def update_order_clinical_trial(request, order_id):
-    if not Order.objects.filter(pk=order_id).exists():
+def update_virtual_clinical_trial(request, virtual_id):
+    if not Virtual.objects.filter(pk=virtual_id).exists():
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    order = Order.objects.get(pk=order_id)
-    serializer = OrderSerializer(order, data=request.data, partial=True)
+    virtual = Virtual.objects.get(pk=virtual_id)
+    serializer = VirtualSerializer(virtual, data=request.data, partial=True)
 
     if serializer.is_valid():
         serializer.save()
@@ -222,26 +219,26 @@ def update_order_clinical_trial(request, order_id):
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
-def update_status_user(request, order_id):
-    if not Order.objects.filter(pk=order_id).exists():
+def update_status_user(request, virtual_id):
+    if not Virtual.objects.filter(pk=virtual_id).exists():
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    order = Order.objects.get(pk=order_id)
+    virtual = Virtual.objects.get(pk=virtual_id)
 
-    order.owner = identity_user(request)
-    order.status = 2
-    order.date_formation = timezone.now()
-    order.save()
+    virtual.owner = identity_user(request)
+    virtual.status = 2
+    virtual.date_formation = timezone.now()
+    virtual.save()
 
-    serializer = OrderSerializer(order)
+    serializer = VirtualSerializer(virtual)
 
     return Response(serializer.data)
 
 
 @api_view(["PUT"])
 @permission_classes([IsModerator])
-def update_status_admin(request, order_id):
-    if not Order.objects.filter(pk=order_id).exists():
+def update_status_admin(request, virtual_id):
+    if not Virtual.objects.filter(pk=virtual_id).exists():
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     request_status = int(request.data["status"])
@@ -249,73 +246,63 @@ def update_status_admin(request, order_id):
     if request_status not in [3, 4]:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    order = Order.objects.get(pk=order_id)
+    virtual = Virtual.objects.get(pk=virtual_id)
 
-    if order.status != 2:
+    if virtual.status != 2:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    order.moderator = identity_user(request)
-    order.status = request_status
-    order.date_complete = timezone.now()
-    order.save()
+    virtual.moderator = identity_user(request)
+    virtual.status = request_status
+    virtual.date_complete = timezone.now()
+    virtual.save()
 
-    serializer = OrderSerializer(order)
+    serializer = VirtualSerializer(virtual)
 
     return Response(serializer.data)
 
 
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
-def delete_order(request, order_id):
-    if not Order.objects.filter(pk=order_id).exists():
+def delete_virtual(request, virtual_id):
+    if not Virtual.objects.filter(pk=virtual_id).exists():
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    order = Order.objects.get(pk=order_id)
+    virtual = Virtual.objects.get(pk=virtual_id)
 
-    if order.status != 1:
+    if virtual.status != 1:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    order.status = 5
-    order.save()
+    virtual.status = 5
+    virtual.save()
 
     return Response(status=status.HTTP_200_OK)
 
 
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
-def delete_tariff_from_order(request, order_id, tariff_id):
-    if not TariffOrder.objects.filter(order_id=order_id, tariff_id=tariff_id).exists():
+def delete_tariff_from_virtual(request, virtual_id, tariff_id):
+    if not TariffVirtual.objects.filter(virtual_id=virtual_id, tariff_id=tariff_id).exists():
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    item = TariffOrder.objects.get(order_id=order_id, tariff_id=tariff_id)
+    item = TariffVirtual.objects.get(virtual_id=virtual_id, tariff_id=tariff_id)
     item.delete()
 
-    if not TariffOrder.objects.filter(order_id=order_id).exists():
-        order = Order.objects.get(pk=order_id)
-        order.delete()
+    if not TariffVirtual.objects.filter(virtual_id=virtual_id).exists():
+        virtual = Virtual.objects.get(pk=virtual_id)
+        virtual.delete()
 
     return Response(status=status.HTTP_200_OK)
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def get_tariff_in_order(request, order_id, tariff_id):
-    if not TariffOrder.objects.filter(tariff_id=tariff_id, order_id=order_id).exists():
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    item = TariffOrder.objects.get(tariff_id=tariff_id, order_id=order_id)
-    return Response(item.months)
-
-
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
-def update_tariff_in_order(request, order_id, tariff_id):
-    if not TariffOrder.objects.filter(tariff_id=tariff_id, order_id=order_id).exists():
+def update_tariff_in_virtual(request, virtual_id, tariff_id):
+    if not TariffVirtual.objects.filter(tariff_id=tariff_id, virtual_id=virtual_id).exists():
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    item = TariffOrder.objects.get(tariff_id=tariff_id, order_id=order_id)
+    item = TariffVirtual.objects.get(tariff_id=tariff_id, virtual_id=virtual_id)
 
-    serializer = TariffOrderSerializer(item, data=request.data, many=False, partial=True)
+    serializer = TariffVirtualSerializer(item, data=request.data, many=False, partial=True)
 
     if serializer.is_valid():
         serializer.save()
@@ -338,18 +325,15 @@ def login(request):
 
     access_token = create_access_token(user.id)
 
-    serializer = UserSerializer(
-        user,
-        context={
-            "access_token": access_token
-        }
-    )
+    user_data = {
+        "user_id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "is_moderator": user.is_moderator,
+        "access_token": access_token
+    }
 
-    response = Response(serializer.data, status=status.HTTP_200_OK)
-
-    response.set_cookie('access_token', access_token, httponly=False, expires=settings.JWT["ACCESS_TOKEN_LIFETIME"])
-
-    return response
+    return Response(user_data, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
@@ -369,11 +353,7 @@ def register(request):
         "access_token": access_token
     }
 
-    response = Response(message, status=status.HTTP_201_CREATED)
-
-    response.set_cookie('access_token', access_token, httponly=False, expires=settings.JWT["ACCESS_TOKEN_LIFETIME"])
-
-    return response
+    return Response(message, status=status.HTTP_201_CREATED)
 
 
 @api_view(["POST"])
@@ -382,7 +362,7 @@ def check(request):
     user = identity_user(request)
 
     user = CustomUser.objects.get(pk=user.pk)
-    serializer = UserSerializer(user)
+    serializer = UserCheckSerializer(user)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -395,9 +375,8 @@ def logout(request):
     if access_token not in cache:
         cache.set(access_token, settings.JWT["ACCESS_TOKEN_LIFETIME"])
 
-    message = {"message": "Вы успешно вышли из аккаунта"}
-    response = Response(message, status=status.HTTP_200_OK)
+    message = {
+        "message": "Вы успешно вышли из аккаунта"
+    }
 
-    response.delete_cookie('access_token')
-
-    return response
+    return Response(message, status=status.HTTP_200_OK)

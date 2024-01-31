@@ -10,14 +10,14 @@ class Tariff(models.Model):
         (2, 'Удалена'),
     )
 
-    name = models.CharField(verbose_name="Название", blank=True, null=True)
-    description = models.TextField(verbose_name="Описание", blank=True, null=True)
-    ram = models.IntegerField(verbose_name="Оперативная память", blank=True, null=True)
-    ssd = models.IntegerField(verbose_name="Размер SSD хранилища", blank=True, null=True)
-    price = models.IntegerField(verbose_name="Цена в месяц", blank=True, null=True)
+    name = models.CharField(verbose_name="Название", blank=True)
+    description = models.TextField(verbose_name="Описание", blank=True)
+    ram = models.IntegerField(verbose_name="Оперативная память", null=True)
+    ssd = models.IntegerField(verbose_name="Размер SSD хранилища", null=True)
+    price = models.IntegerField(verbose_name="Цена в месяц", null=True)
 
     status = models.IntegerField( verbose_name="Статус", choices=STATUS_CHOICES, default=1)
-    image = models.ImageField(verbose_name="Картинка", default="tariffs/default.jpg", upload_to="tariffs", blank=True, null=True)
+    image = models.ImageField(verbose_name="Картинка", default="tariffs/default.jpg", upload_to="tariffs")
 
     def __str__(self):
         return self.name
@@ -65,7 +65,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = "Пользователи"
 
 
-class Order(models.Model):
+class Virtual(models.Model):
     STATUS_CHOICES = (
         (1, 'Введён'),
         (2, 'В работе'),
@@ -83,23 +83,23 @@ class Order(models.Model):
     moderator = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, verbose_name="Модератор", related_name='moderator', null=True)
 
     def __str__(self):
-        return "Заявка №" + str(self.pk)
+        return "Виртуальная машина №" + str(self.pk)
 
     class Meta:
-        verbose_name = "Заявка"
-        verbose_name_plural = "Заявки"
+        verbose_name = "Виртуальная машина"
+        verbose_name_plural = "Виртуальные машины"
         ordering = ('-date_formation', )
 
 
 # м-м
-class TariffOrder(models.Model):
+class TariffVirtual(models.Model):
     tariff = models.ForeignKey(Tariff, models.CASCADE, blank=True, null=True)
-    order = models.ForeignKey(Order, models.CASCADE, blank=True, null=True)
+    virtual = models.ForeignKey(Virtual, models.CASCADE, blank=True, null=True)
     months = models.IntegerField(verbose_name="Кол-во месяцев аренды", blank=True, null=True)
 
     def __str__(self):
-        return "Тариф-Заявка №" + str(self.pk)
+        return "М-М №" + str(self.pk)
 
     class Meta:
-        verbose_name = "Тариф-Заявка"
-        verbose_name_plural = "Тарифы-Заявки"
+        verbose_name = "М-М"
+        verbose_name_plural = "М-М"

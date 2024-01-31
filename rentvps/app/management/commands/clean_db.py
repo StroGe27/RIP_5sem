@@ -4,7 +4,7 @@ from ...models import *
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        TariffOrder.objects.all().delete()
-        Order.objects.all().delete()
+        TariffVirtual.objects.all().delete()
+        Virtual.objects.all().delete()
         Tariff.objects.all().delete()
         CustomUser.objects.all().delete()
